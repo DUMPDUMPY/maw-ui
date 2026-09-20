@@ -18,4 +18,8 @@ describe("desktop terminal deep-link parity", () => {
     expect(modal).toContain('window.addEventListener("keydown", handler, true)');
     expect(modal).toContain('window.removeEventListener("keydown", handler, true)');
   });
+
+  test("lets Escape through to xterm when the terminal has focus", () => {
+    expect(modal).toContain('.closest(".xterm")');
+  });
 });

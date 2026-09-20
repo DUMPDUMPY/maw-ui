@@ -34,6 +34,11 @@ export function TerminalModal({ agent, send, onClose, onNavigate, onSelectSiblin
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
+      // Don't steal Escape from the terminal: when xterm has focus it must
+      // reach the PTY (vim cancel, tmux prefix, claude Esc-Esc, …).
+      // Only close the modal when focus is outside the terminal.
+      const t = event.target as HTMLElement | null;
+      if (t && typeof t.closest === "function" && t.closest(".xterm")) return;
       event.preventDefault();
       event.stopPropagation();
       onClose();
