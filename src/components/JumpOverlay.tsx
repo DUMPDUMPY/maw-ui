@@ -47,7 +47,7 @@ export const JumpOverlay = memo(function JumpOverlay({
     }
     // Text match on name, session, target
     return agents.filter(a => {
-      const haystack = `${a.name} ${a.session} ${a.target}`.toLowerCase();
+      const haystack = `${a.name} ${a.session} ${a.target} ${a.project ?? ""}`.toLowerCase();
       return q.split(/\s+/).every(word => haystack.includes(word));
     });
   }, [agents, query]);
@@ -134,6 +134,11 @@ export const JumpOverlay = memo(function JumpOverlay({
                 <span className="text-sm font-mono font-semibold" style={{ color: isSelected ? style.accent : "#cdd6f4" }}>
                   {displayName}
                 </span>
+                {agent.project && (
+                  <span className="text-[10px] font-mono text-white/40 truncate max-w-[160px]">
+                    {agent.project}
+                  </span>
+                )}
                 <span className="text-[10px] font-mono text-white/25 ml-auto">
                   {agent.session}:{agent.windowIndex}
                 </span>
