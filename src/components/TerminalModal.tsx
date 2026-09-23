@@ -1,7 +1,15 @@
 import { lazy, Suspense, useRef, useState, useCallback, useEffect } from "react";
 import type { AgentState } from "../lib/types";
 import { uploadTerminalImage } from "../lib/terminalImageUpload";
+import { TERMINAL_COMMANDS } from "../quickCommands";
 import type { XTerminalHandle } from "./XTerminal";
+
+// ← → are modal-local extras (upstream TERMINAL_COMMANDS only ships ↑ ↓)
+const ARROW_KEYS = [
+  { label: "←", text: "\x1b[D", color: "#64748B" },
+  { label: "→", text: "\x1b[C", color: "#64748B" },
+];
+const MODAL_KEYS = [...TERMINAL_COMMANDS.slice(0, 6), ...ARROW_KEYS, ...TERMINAL_COMMANDS.slice(6)];
 
 const XTerminal = lazy(() => import("./XTerminal").then(m => ({ default: m.XTerminal })));
 
@@ -163,6 +171,21 @@ export function TerminalModal({ agent, send, onClose, onNavigate, onSelectSiblin
               onSelectSibling={onSelectSibling}
             />
           </Suspense>
+        </div>
+
+        {/* Quick keys — on-screen buttons inject VT bytes into the PTY
+            (Esc/Enter/arrows ←↑↓→/y/n/Ctrl+C/Tab) for touch + mouse users */}
+        <div className="flex items-center gap-1.5 px-3 py-1.5 flex-shrink-0 overflow-x-auto border-t border-white/[0.06]" style={{ background: "#0e0e18" }}>
+          {MODAL_KEYS.map(cmd => (
+            <button
+              key={cmd.label}
+              onClick={() => xtermRef.current?.inject(cmd.text)}
+              className="shrink-0 rounded-lg font-mono active:scale-90 transition-transform cursor-pointer"
+              style={{ padding: "6px 12px", minHeight: 36, minWidth: 44, background: `${cmd.color}12`, color: cmd.color, border: `1px solid ${cmd.color}25`, fontSize: 12 }}
+            >
+              {cmd.label}
+            </button>
+          ))}
         </div>
       </div>
 

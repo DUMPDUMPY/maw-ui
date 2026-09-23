@@ -453,7 +453,7 @@ export const HoverPreviewCard = memo(function HoverPreviewCard({
           dangerouslySetInnerHTML={{ __html: ansiToHtml(processCapture(content)) }}
         />
         {pinned && send && (
-          <div className="absolute bottom-3 right-3 flex flex-col gap-1 z-10">
+          <div className="absolute bottom-3 right-3 flex flex-col items-center gap-1 z-10">
             <button
               onMouseDown={(e) => e.stopPropagation()}
               onClick={(e) => { e.stopPropagation(); send({ type: "send", target: agent.target, text: "\x1b[A" }); inputRef.current?.focus(); }}
@@ -462,6 +462,24 @@ export const HoverPreviewCard = memo(function HoverPreviewCard({
             >
               <svg width={12} height={8} viewBox="0 0 12 8"><path d="M1 7L6 1L11 7" stroke="currentColor" strokeWidth={1.5} fill="none" strokeLinecap="round" /></svg>
             </button>
+            <div className="flex gap-1">
+              <button
+                onMouseDown={(e) => e.stopPropagation()}
+                onClick={(e) => { e.stopPropagation(); send({ type: "send", target: agent.target, text: "\x1b[D" }); inputRef.current?.focus(); }}
+                className="w-9 h-8 rounded-lg bg-black/70 backdrop-blur border border-white/10 text-white/50 hover:text-white hover:bg-white/10 cursor-pointer flex items-center justify-center transition-colors"
+                title="Left → tmux"
+              >
+                <svg width={8} height={12} viewBox="0 0 8 12"><path d="M7 1L1 6L7 11" stroke="currentColor" strokeWidth={1.5} fill="none" strokeLinecap="round" /></svg>
+              </button>
+              <button
+                onMouseDown={(e) => e.stopPropagation()}
+                onClick={(e) => { e.stopPropagation(); send({ type: "send", target: agent.target, text: "\x1b[C" }); inputRef.current?.focus(); }}
+                className="w-9 h-8 rounded-lg bg-black/70 backdrop-blur border border-white/10 text-white/50 hover:text-white hover:bg-white/10 cursor-pointer flex items-center justify-center transition-colors"
+                title="Right → tmux"
+              >
+                <svg width={8} height={12} viewBox="0 0 8 12"><path d="M1 1L7 6L1 11" stroke="currentColor" strokeWidth={1.5} fill="none" strokeLinecap="round" /></svg>
+              </button>
+            </div>
             <button
               onMouseDown={(e) => e.stopPropagation()}
               onClick={(e) => { e.stopPropagation(); send({ type: "send", target: agent.target, text: "\x1b[B" }); inputRef.current?.focus(); }}

@@ -22,4 +22,19 @@ describe("desktop terminal deep-link parity", () => {
   test("lets Escape through to xterm when the terminal has focus", () => {
     expect(modal).toContain('.closest(".xterm")');
   });
+
+  test("renders on-screen quick keys incl left/right arrows that inject into the PTY", () => {
+    expect(modal).toContain("MODAL_KEYS");
+    expect(modal).toContain("xtermRef.current?.inject(cmd.text)");
+    expect(modal).toContain('"←"');
+    expect(modal).toContain('"→"');
+  });
+
+  test("mission pinned card has full arrow D-pad sending VT bytes to tmux", () => {
+    const card = readFileSync(new URL("./HoverPreviewCard.tsx", import.meta.url), "utf8");
+    expect(card).toContain('title="Left → tmux"');
+    expect(card).toContain('title="Right → tmux"');
+    expect(card).toContain('text: "\\x1b[D"');
+    expect(card).toContain('text: "\\x1b[C"');
+  });
 });
